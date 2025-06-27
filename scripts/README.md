@@ -32,7 +32,7 @@ Very similar to `Model.py`, with the following differences:
 - `n` --> this is now the name of the type of model (simple_abund, simple_act, etc.)
 
 
-### Other notebooks to explore the results
+### Other notebooks (mostly to make figures in the paper)
 - `random_seed_explore.ipynb`:
 	- Code to create:
 		- Supplemental Figure 1
