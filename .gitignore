@@ -1,4 +1,5 @@
-model_data/*
+model_data/*.png
+model_data/*.csv
 results/*
 figures/*
 ygob_seqs/*
