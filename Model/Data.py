@@ -206,7 +206,7 @@ class SplitData:
             self.tensor_y_test = torch.stack((tensor_y_test_abund, tensor_y_test_act)).transpose(0,1)
 
 
-    def read_split_data(self, train_file, val_file, scaler="MinMaxScaler", return_val=False, ratio=False):
+    def read_split_data(self, train_file, val_file, test_file, scaler="MinMaxScaler", return_val=False, ratio=False):
         # Read in both the data somehow
         # Use scalar.fix to get min and max of all data
         # Transfor both data separately 
@@ -251,13 +251,35 @@ class SplitData:
             self.y_val_ratio = self.data_reader.get_ratio()
             self.y_val_ratio = self.y_val_ratio.values.reshape(-1, 1)
 
+        # Reading in the test data
+        self.data_reader.load_file(test_file) # Loading the first data file
+
+        if self.encoding_type == "1D":
+             self.X_test = self.data_reader.encode_seq_1d() # One-hot encoded sequences
+        elif self.encoding_type == "2D":
+            self.X_test = self.data_reader.encode_seq_2d() # Counts of amino acids
+        else:
+            print("Encoding must be '1D' or '2D'. Defaulting to '1D'")
+            self.X_test = self.data_reader.encode_seq_1d() # One-hot encoded sequences
+
+        self.y_test_abundance = self.data_reader.get_abundance()
+        self.y_test_activity  = self.data_reader.get_activity()
+        self.y_test_abundance = self.y_test_abundance.values.reshape(-1, 1)
+        self.y_test_activity = self.y_test_activity.values.reshape(-1, 1)
+
+        if ratio: 
+            self.y_test_ratio = self.data_reader.get_ratio()
+            self.y_test_ratio = self.y_test_ratio.values.reshape(-1, 1)
+
         # Scaling the data
         if scaler == "1000":
             self.y_train_abundance = self.y_train_abundance / 1000
             self.y_val_abundance = self.y_val_abundance / 1000
+            self.y_test_abundance = self.y_test_abundance / 1000
 
             self.y_train_activity = self.y_train_activity / 1000
             self.y_val_activity = self.y_val_activity / 1000
+            self.y_test_activity = self.y_test_activity / 1000
 
 
         else:
@@ -278,10 +300,10 @@ class SplitData:
                     scaler_ratio = MinMaxScaler(feature_range=(0,1))
 
             # print(self.y_train_abundance.flatten())
-            all_abund = np.concatenate((self.y_train_abundance, self.y_val_abundance))
-            all_activity = np.concatenate((self.y_train_activity, self.y_val_activity))
+            all_abund = np.concatenate((self.y_train_abundance, self.y_val_abundance, self.y_test_abundance))
+            all_activity = np.concatenate((self.y_train_activity, self.y_val_activity, self.y_test_activity))
             if ratio:
-                all_ratio = np.concatenate((self.y_train_ratio, self.y_val_ratio))
+                all_ratio = np.concatenate((self.y_train_ratio, self.y_val_ratio, self.y_test_ratio))
             
             # Get min and max from all data
             if return_val:
@@ -302,39 +324,48 @@ class SplitData:
 
             self.y_train_abundance = scaler_abund.transform(self.y_train_abundance)
             self.y_val_abundance = scaler_abund.transform(self.y_val_abundance)
+            self.y_test_abundance = scaler_abund.transform(self.y_test_abundance)
 
             self.y_train_activity = scaler_activity.transform(self.y_train_activity)
             self.y_val_activity = scaler_activity.transform(self.y_val_activity)
+            self.y_test_activity = scaler_abund.transform(self.y_test_activity)
             
             if ratio:
                 self.y_train_ratio = scaler_ratio.transform(self.y_train_ratio)
                 self.y_val_ratio = scaler_ratio.transform(self.y_val_ratio)
+                self.y_test_ratio = scaler_ratio.transform(self.y_test_ratio)
 
         # Make everything into tensors
         self.tensor_X_train = torch.from_numpy(self.X_train).type(torch.FloatTensor)
         self.tensor_X_val = torch.from_numpy(self.X_val).type(torch.FloatTensor)
+        self.tensor_X_test = torch.from_numpy(self.X_test).type(torch.FloatTensor)
 
         tensor_y_train_abund = torch.tensor(self.y_train_abundance).unsqueeze(1).type(torch.FloatTensor) #.unsqueeze(1) # makes the dimensions match: (18,1) instead of (18)
         tensor_y_val_abund = torch.tensor(self.y_val_abundance).unsqueeze(1).type(torch.FloatTensor)
+        tensor_y_test_abund = torch.tensor(self.y_test_abundance).unsqueeze(1).type(torch.FloatTensor)
 
         tensor_y_train_act = torch.tensor(self.y_train_activity).unsqueeze(1).type(torch.FloatTensor) #.unsqueeze(1) # makes the dimensions match: (18,1) instead of (18)
         tensor_y_val_act = torch.tensor(self.y_val_activity).unsqueeze(1).type(torch.FloatTensor)
+        tensor_y_test_act = torch.tensor(self.y_test_activity).unsqueeze(1).type(torch.FloatTensor)
 
         if ratio:
             tensor_y_train_ratio = torch.tensor(self.y_train_ratio).unsqueeze(1).type(torch.FloatTensor)
             tensor_y_val_ratio = torch.tensor(self.y_val_ratio).unsqueeze(1).type(torch.FloatTensor)
+            tensor_y_test_ratio = torch.tensor(self.y_test_ratio).unsqueeze(1).type(torch.FloatTensor)
 
         if ratio:
             self.tensor_y_train = torch.stack((tensor_y_train_abund, tensor_y_train_act, tensor_y_train_ratio)).transpose(0,1)
             self.tensor_y_val = torch.stack((tensor_y_val_abund, tensor_y_val_act, tensor_y_val_ratio)).transpose(0,1)
+            self.tensor_y_test = torch.stack((tensor_y_test_abund, tensor_y_test_act, tensor_y_test_ratio)).transpose(0,1)
         else:
             self.tensor_y_train = torch.stack((tensor_y_train_abund, tensor_y_train_act)).transpose(0,1)
             self.tensor_y_val = torch.stack((tensor_y_val_abund, tensor_y_val_act)).transpose(0,1)
+            self.tensor_y_test = torch.stack((tensor_y_test_abund, tensor_y_test_act)).transpose(0,1)
 
         # full_analysis.py uses all data combined
-        self.X = np.concatenate((self.X_train, self.X_val))
-        self.y_abundance = np.concatenate((self.y_train_abundance,self.y_val_abundance))
-        self.y_activity = np.concatenate((self.y_train_activity, self.y_val_activity))
+        self.X = np.concatenate((self.X_train, self.X_val, self.X_test))
+        self.y_abundance = np.concatenate((self.y_train_abundance,self.y_val_abundance,self.y_test_abundance))
+        self.y_activity = np.concatenate((self.y_train_activity, self.y_val_activity,self.y_test_activity))
         size = len(self.y_abundance)
         
         if return_val:
@@ -351,8 +382,8 @@ class SplitData:
         val_data_loader = FastTensorDataLoader( 
                 self.tensor_X_val, self.tensor_y_val, batch_size=batch_size, shuffle=True)
         
-        # test_data_loader = FastTensorDataLoader( 
-                # self.tensor_X_test, self.tensor_y_test, batch_size=batch_size, shuffle=True)
+        test_data_loader = FastTensorDataLoader( 
+                self.tensor_X_test, self.tensor_y_test, batch_size=batch_size, shuffle=True)
         
         if self.encoding_type == "2D":
             size = tuple(self.tensor_X_train.shape[1:4]) # Get second two dimensions (first dimension is # of samples)
@@ -360,7 +391,7 @@ class SplitData:
             size = [self.tensor_X_train.shape[1]]
 
         # Size needs to be a tuple
-        return train_data_loader, val_data_loader, size#, test_data_loader
+        return train_data_loader, val_data_loader, test_data_loader, size
 
 
 # Adapted from MoCHI

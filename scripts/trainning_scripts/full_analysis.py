@@ -6,7 +6,11 @@ import numpy as np
 import argparse
 import os
 
-from Model import ADModel_three_state, ADModel_three_state_abund, ADModel_two_state, ADModel_two_state_abund, ADModel_act, ADModel_abund
+os.chdir("/Users/claireleblanc/Documents/grad_school/staller_lab/NN_interpretability_for_AD_prediction/Model")
+from ADModel_three_state import ADModel_three_state, ADModel_three_state_abund
+from ADModel_two_state import ADModel_two_state, ADModel_two_state_abund
+from ADModel_act import ADModel_act
+from ADModel_abund import ADModel_abund
 from Data import DataReader, SplitData, FastTensorDataLoader
 
 torch.manual_seed(25)
@@ -28,6 +32,7 @@ parser.add_argument("-o","--output_dir",help="Output directory",type=str, defaul
 parser.add_argument("-p","--positive",action='store_true',help="Use only positive linear weights")
 parser.add_argument("-i","--intelligent_split",action='store_true',help="Whether to use separate file of validation data (must be provided with the -v argument)")
 parser.add_argument("-v", "--val_file", help = "Input file to validation sequences", type=str, default=None)
+parser.add_argument("-t", "--test_file", help = "Input file to test sequences", type=str, default=None)
 parser.add_argument("-n","--normal_model",help="Which model to use. Options are: closed, abundance, or two-state", type=str, default=None)
 parser.add_argument("-hv", "--hill_value", help="What n value to use in the hill function", type=int, default=None)
 parser.add_argument("-ak", "--abund_kernel_value", help="What kernel size to use to predict the activity", type=int, default=None)

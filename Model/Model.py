@@ -180,7 +180,7 @@ def fit(args):
     kernel_size = params[7]
     learning_rate = params[8]
     relu = params[9] 
-    test = params[10] 
+    test_file = params[10] 
     val_file = params[11]
     intelligent_split = params[12]
     neg_pen = params[13]
@@ -196,12 +196,12 @@ def fit(args):
     split_data = SplitData(data_reader,encoding_type="2D")
     
     if intelligent_split: 
-        split_data.read_split_data(file, val_file, scaler=scale)
+        split_data.read_split_data(file, val_file, test_file, scaler=scale)
     else: 
         split_data.read_data(scale=scale)
         split_data.split_data(ratio=False)
 
-    train_data_loader, val_data_loader, size = split_data.load_data(batch_size)
+    train_data_loader, val_data_loader, test_data_loader, size = split_data.load_data(batch_size)
     
     # Initalizing the model
     if args.model == "three_state":
@@ -260,7 +260,7 @@ def fit(args):
     model.get_actual_and_predicted(train_data_loader, device, filepath=f"{outfile}_train.csv")
 
     # Need to implement testing!!!
-    if test:
+    if test_file:
         model.get_actual_and_predicted(test_data_loader, device,filepath=f"{outfile}_test.csv")
 
     # Plot test and train losses
@@ -280,7 +280,7 @@ def main():
     parser.add_argument("-l", "--learning_rate", help = "Learning rate",type=float)
     parser.add_argument("-e", "--epochs", help = "Number of epochs", type=int)
     parser.add_argument("-o", "--outfile", help = "File to write predicted data", type=str)
-    parser.add_argument("-t","--test",action='store_true',help="Whether to evaluate on test data as well")
+    parser.add_argument("-t","--test", help="Test file to evaluate the data on", type=str)
     parser.add_argument("-i","--intelligent_split",action='store_true',help="Whether to use separate file of validation data (must be provided with the -v argument)")
     parser.add_argument("-np","--negative_penalty",help="How much to penalize negative K values",type=float)
     parser.add_argument("-wp","--weight_penalty",help="How much to penalize negative weight values", type=float)
