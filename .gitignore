@@ -4,3 +4,5 @@ model_data/*
 results/*
 figures/*
 ygob_seqs/*
+Data/*.xlsx
+Data/all_seqs_overlap_matrix.csv
