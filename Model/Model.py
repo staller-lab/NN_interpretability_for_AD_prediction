@@ -291,7 +291,7 @@ def main():
     parser.add_argument("-c", "--outchannels", help = "File to write predicted data", type=int)
     parser.add_argument("-k","--kernel_size",help="Width of kernel",type=int)
     parser.add_argument("-r","--relu",action='store_true',help="Use the ReLU activation function instead of the parametric relu")
-    parser.add_argument("-m","--model",help="Which model to run. Options are 'closed', 'abundance', or 'two-state'",type=str)
+    parser.add_argument("-m","--model",help="Which model to run. Options are simple_abund, simple_act, three_state_abund, two_state_abund, three_state, two_state",type=str)
     parser.add_argument("-hv", "--hill_value", help="What n value to use in the hill function", type=int)
     parser.add_argument("-ak", "--abund_kernel_value", help="What kernel size to use to predict the activity", type=int)
 
