@@ -1,4 +1,4 @@
-A=Linear
+A=Hill
 np=0.1
 wp=0.5
 hill_val=1
