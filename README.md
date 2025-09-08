@@ -13,6 +13,6 @@ The shell scripts used to train the model are also located in the `scripts/train
 - `train_three_state_abund.sh` --> Trains the three state BiophysicalNN
 
 ### Analysis scripts
-All of the scripts used to analyze the NNs and create the figures are also located in the `scripts folder\analysis_scripts`. These are described in depth in that folder. 
+All of the scripts used to analyze the NNs and create the figures are also located in the `scripts/analysis_scripts`. These are described in depth in that folder. 
 
 
