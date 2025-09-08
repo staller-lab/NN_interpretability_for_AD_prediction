@@ -1,29 +1,11 @@
 
 # Explanation of scripts: 
 
-`Data.py` --> Loads the datasets
-`Model.py` --> Contains classes for the simple and biophysical NNs, contains training code
 
 `full_analysis.py` --> generated summary plots for a given model. Scatter plots showing correlations and interpretation plots visualizing the parameters of the NN. 
 `make_summary_file.py` --> writes summary stats (correlation coefficients, hyperparameters, etc) to a file. Either creates or appends to the results.csv file. 
 
 `train_*.sh` --> Contains the command line code to train the various versions of model, generate summary figures and write the results to a summary file (will append the correlation coefficients and data on the training run to results.csv). There are many different command line options to determine the hyperparameters of the mode. 
-
-### Parameters for `Model.py`: 
-- `k` --> size of convolutional filter
-- `wp` --> how much to penalize negative weights
-- `seed` --> seed for random initalization
-- `e` --> epochs
-- `c` --> channels of the convolution filter (I've only played around with one channel, more than 1 becomes very uninterpretable)
-- `m` --> key word for the type of model (simple_abund, simple_act, three_state_abund, two_state_abund, three_state, two_state. Three_state_abund and two_state_abund allow you to set the size of the abundance convolution filter separately from the other convolutional filters using the argument -ak) 
-- `ap` --> how much to weight activity vs. abundance in training, no longer relevant because they are getting trainned separately
-- `np` --> how much to penalize negative activity predictions
-- `s` --> how to scale the input data, I always used MinMaxScaler
-- `i` --> whether to use a preditermined data split (passed in by the user)
-- `f` --> the input file, if argument i is passed, this should only be the trainning data
-- `v` --> the validation data file
-- `hv` --> the hill coefficient to use in biophysical models
-- `out_model` --> name of the output model
 
 ### Parameters for `full_analysis.py` and `make_summary_file.py`
 Very similar to `Model.py`, with the following differences: 
