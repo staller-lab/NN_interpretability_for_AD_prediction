@@ -15,4 +15,4 @@ The shell scripts used to train the model are also located in the `scripts/train
 ### Analysis scripts
 All of the scripts used to analyze the NNs and create the figures are also located in the `scripts/analysis_scripts`. These are described in depth in that folder. 
 
-The code used to run DeepLift on ADHunter-ratio (Figure 3G) is located in this repository: https://github.com/staller-lab/ADHunter-DeepLift/tree/main
+The code used to run DeepLift on ADHunter-ratio (Figure 3G) is located in this repository: https://github.com/staller-lab/ADHunter-DeepLift
