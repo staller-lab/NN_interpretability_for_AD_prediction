@@ -1,12 +1,17 @@
+# Author: Claire LeBlanc, 2025
+# This code is designed to create summary plots of NN training iterations
+# These plots were not used in the final paper, but were useful for benchmarking
+
 import torch
 import pandas as pd
-import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
+import matplotlib.pyplot as plt
 import numpy as np
 import argparse
-import os
 
-os.chdir("/Users/claireleblanc/Documents/grad_school/staller_lab/NN_interpretability_for_AD_prediction/Model")
+import os
+import sys
+sys.path.append("/Users/claireleblanc/Documents/grad_school/staller_lab/NN_interpretability_for_AD_prediction/Model")
 from ADModel_three_state import ADModel_three_state, ADModel_three_state_abund
 from ADModel_two_state import ADModel_two_state, ADModel_two_state_abund
 from ADModel_act import ADModel_act
@@ -15,12 +20,11 @@ from Data import DataReader, SplitData, FastTensorDataLoader
 
 torch.manual_seed(25)
 
-# For higher resoltion figures
-plt.rcParams['figure.dpi'] = 300
-plt.rcParams['savefig.dpi'] = 300
-
 parser = argparse.ArgumentParser()
 
+# These arguments mostly match the arguments used in training the model, with one exception:
+# Now -n instead of -m is used to specify the type of file
+# -m is used to specify the name of the trained model
 parser.add_argument("-f","--file",help="File with activity, sequence, abundance data",type=str, default=None)
 parser.add_argument("-s", "--scale",help = "Value to divide activity and abundance by",type=str, default=None)
 parser.add_argument("-a", "--activity", help = "Function used to calcualte activity", type=str, default=None)
@@ -29,20 +33,21 @@ parser.add_argument("-k","--kernel_size",help="Width of kernel",type=int, defaul
 parser.add_argument("-r","--relu",action='store_true',help="Use the ReLU activation function instead of the parametric relu")
 parser.add_argument("-m","--model",help="Path to trained model",type=str, default=None)
 parser.add_argument("-o","--output_dir",help="Output directory",type=str, default=None)
-parser.add_argument("-p","--positive",action='store_true',help="Use only positive linear weights")
 parser.add_argument("-i","--intelligent_split",action='store_true',help="Whether to use separate file of validation data (must be provided with the -v argument)")
 parser.add_argument("-v", "--val_file", help = "Input file to validation sequences", type=str, default=None)
-parser.add_argument("-t", "--test_file", help = "Input file to test sequences", type=str, default=None)
 parser.add_argument("-n","--normal_model",help="Which model to use. Options are: closed, abundance, or two-state", type=str, default=None)
 parser.add_argument("-hv", "--hill_value", help="What n value to use in the hill function", type=int, default=None)
 parser.add_argument("-ak", "--abund_kernel_value", help="What kernel size to use to predict the activity", type=int, default=None)
+parser.add_argument("-t", "--test_file", help = "Input file to test sequences", type=str, default=None)
 
 args = parser.parse_args()
 
+# Reading in the arguments
 file = args.file
 if args.val_file: 
     val_file = args.val_file
-
+if args.test_file: 
+    test_file = args.test_file
 if args.scale:
     scale = args.scale
 else:
@@ -76,7 +81,6 @@ model = args.model
 outdir = args.output_dir
 smart_split = args.intelligent_split
 relu = args.relu
-positive = args.positive
 
 data_reader = DataReader()
 
@@ -86,7 +90,7 @@ df = pd.read_csv(file)
 split_data = SplitData(data_reader,encoding_type="2D")
 
 if smart_split: 
-        X, y_abundance, y_activity, size = split_data.read_split_data(file, val_file, scaler=scale)
+    X, y_abundance, y_activity, size = split_data.read_split_data(file, val_file, test_file, scaler=scale)
 
 else: 
     X, y_abundance, y_activity, size = split_data.read_data(file, scale=scale)
@@ -106,16 +110,16 @@ simple_act = False
 simple_abund = False
 
 if args.normal_model == "three_state": 
-    loaded_model = ADModel_three_state(size,activity_fun,kernel_size,outchannel,relu,positive, hill_val)
+    loaded_model = ADModel_three_state(size,activity_fun,kernel_size,outchannel,relu, hill_val)
 elif args.normal_model == "three_state_abund":
-    loaded_model = ADModel_three_state_abund(size,activity_fun,kernel_size,outchannel,relu,positive, hill_val, abund_kernel_value)
+    loaded_model = ADModel_three_state_abund(size,activity_fun,kernel_size,outchannel,relu, hill_val, abund_kernel_value)
     abund_kernel = True
 elif args.normal_model == "two_state": 
     two_state = True
-    loaded_model = ADModel_two_state(size,activity_fun,kernel_size,outchannel,relu,positive, hill_val)
+    loaded_model = ADModel_two_state(size,activity_fun,kernel_size,outchannel,relu, hill_val)
 elif args.normal_model == "two_state_abund":
     two_state = True
-    loaded_model = ADModel_two_state_abund(size,activity_fun,kernel_size,outchannel,relu,positive, hill_val, abund_kernel_value)
+    loaded_model = ADModel_two_state_abund(size,activity_fun,kernel_size,outchannel,relu, hill_val, abund_kernel_value)
     abund_kernel = True
 elif args.normal_model == "simple_act":
     simple_act = True
@@ -125,7 +129,7 @@ elif args.normal_model == "simple_abund":
     loaded_model = ADModel_abund(size,kernel_size)
 else:
     print("Defaulting to three state model")
-    loaded_model = ADModel_three_state(size,activity_fun,kernel_size,outchannel,relu,positive, hill_val)  # Create an instance of your model
+    loaded_model = ADModel_three_state(size,activity_fun,kernel_size,outchannel,relu, hill_val)  # Create an instance of your model
 
 loaded_model.load_state_dict(torch.load(f"{model}.pth"))
 
@@ -209,7 +213,7 @@ if (not simple_act) and (not simple_abund):
         plt.savefig(f'{outdir}/K2.png')
         plt.clf()
 
-        # Plotting closed
+        # Plotting abundance
         plt.hist(top_activity["closed"], bins = 20, alpha=0.5, label="TFs with highest activity\n(top 10%)",density=True)
         plt.hist(lowest_activity["closed"], bins = 20, alpha=0.5, label = "TFs with lowest activity\n(bottom 10%)",density=True)
         plt.hist(sorted_df["closed"],bins=20, alpha=0.5, label = "All TFs",density=True)
@@ -224,7 +228,7 @@ if (not simple_act) and (not simple_abund):
         plt.clf()
 
     else:
-        # Plotting closed
+        # Plotting abundance
         plt.hist(top_activity["inactive"], bins = 20, alpha=0.5, label="TFs with highest activity\n(top 10%)",density=True)
         plt.hist(lowest_activity["inactive"], bins = 20, alpha=0.5, label = "TFs with lowest activity\n(bottom 10%)",density=True)
         plt.hist(sorted_df["inactive"],bins=20, alpha=0.5, label = "All TFs",density=True)

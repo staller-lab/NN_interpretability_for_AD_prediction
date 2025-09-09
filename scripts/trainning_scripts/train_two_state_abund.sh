@@ -18,9 +18,9 @@ do
     echo $out_model
 
     python ../../Model/Model.py -f $train_file -v $val_file  -i -b 10 -l 0.0001 -e $e -s MinMaxScaler -a $A -c 1 -k $K -ak $ak -o $out_model -m $model -np $np -wp $wp -hv $hill_val -seed $seed
-    # rm -rf $out_folder
-    # python full_analysis.py -f $train_file -v $val_file  -i -s MinMaxScaler -a $A -c 1 -k $K -ak $ak -o $out_folder -m $out_model -n  $model -hv $hill_val
-    # python make_summary_file.py -np $np -wp $wp -f $train_file -v $val_file  -i -s MinMaxScaler -a $A -c 1 -k $K -ak $ak -m $out_model -n  $model -hv $hill_val -aw $ap
+    rm -rf $out_folder
+    python full_analysis.py -f $train_file -v $val_file  -i -s MinMaxScaler -a $A -c 1 -k $K -ak $ak -o $out_folder -m $out_model -n  $model -hv $hill_val
+    python make_summary_file.py -np $np -wp $wp -f $train_file -v $val_file  -i -s MinMaxScaler -a $A -c 1 -k $K -ak $ak -m $out_model -n  $model -hv $hill_val -aw $ap
 
 done;
 done;
