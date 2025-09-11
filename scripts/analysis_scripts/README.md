@@ -22,7 +22,6 @@ These notebooks create the majority of the main figure pannels.
 		- **Figure S13**
 - `degron_screen_data.ipynb` : Investigates data from two human degron screens from Larsen et al. (2025) and Voutsinos et al. (2025)
 	- Contains code to create **Figure S6**
-	- Revisit this! Need to finalize
  - `natural_yeast_ADs.ipynb` : Investigates whether there is differences in the amount of negative amino acids between C-terminal and non-C-terminal activation domains.
 	- Contains code to create **Figure S7**
  - `equilibrium_constants.ipynb` : Explores the relationship between the equilibrium constant, the activity and the finches score.
