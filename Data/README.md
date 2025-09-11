@@ -13,4 +13,7 @@ The scripts that were actually used in the final version of the paper are:
 - `pm_gcn4_sort2_pools_allchannels_wrangled_w_ratio.csv` : This is the data produced by `data_rangle_w_ratio.py`. Contains a column for the 40amino acid sequence (`aa_seq`), a column for the reporter gene activation (`activity`), and a column for the TF abundance (`abundance`).
 - `pm_gcn4_sort2_pools_allchannels_wrangled_w_ratio_test_heirarchical_v2.csv` : This is the test data produced by `split_data_w_test.ipynb`. Test data was used in the final evaluation of the best model.  
 - `pm_gcn4_sort2_pools_allchannels_wrangled_w_ratio_validation_heirarchical_v2.csv` : This is the validation data produced by `split_data_w_test.ipynb`. Validation data was used in early stopping and selecting the best model. 
-- `pm_gcn4_sort2_pools_allchannels_wrangled_w_ratio_validation_heirarchical_v2.csv` : This is the training data produced by `split_data_w_test.ipynb`. This set of training data was used to train all the models. 
+- `pm_gcn4_sort2_pools_allchannels_wrangled_w_ratio_validation_heirarchical_v2.csv` : This is the training data produced by `split_data_w_test.ipynb`. This set of training data was used to train all the models.
+- `Gcn4Array_Design.csv` : Contains information about the original sequence each tile came from.
+- `pm_gcn4_sort2_pools_allchannels.csv` : Gcn4 ortholog screening data. Contains DNA sequences and replicate measurements.
+- 
