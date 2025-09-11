@@ -18,4 +18,5 @@ The scripts that were actually used in the final version of the paper are:
 - `pm_gcn4_sort2_pools_allchannels.csv` : Gcn4 ortholog screening data. Contains DNA sequences and replicate measurements.
 
 - Predictions of other deep NNs on the sequences: `Gcn4_ADpred_preds.csv`, `Gcn4_TADA_preds.pkl`, `tile_data_wrangled_53mer_Paddle_dask_preds.csv`, `TADA_Predictions_hummel.csv`, `niklas_PADDLE.csv`, `niklas_adpred.csv`
--   
+-   `finches-structured_tile-data_calvados.csv` : FINCHES predictions
+-   Predictions for post-hoc mutation analyses: `Top5_PADDLE_tiled_replaced_full_df.csv` and `adunter_top5_preds.csv`
