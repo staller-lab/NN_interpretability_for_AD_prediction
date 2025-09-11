@@ -32,8 +32,7 @@ These notebooks create the majority of the main figure pannels.
 
 ### Other analysis notebooks (do not create figures in paper)
 - `abundance_replicate_correlation.ipynb`: Determines how correlated experimental mCherry measurements are
-- `linear_regression.ipynb`:
-  	- Linear regression on the activity data
+- `linear_regression.ipynb`: Linear regression on the activity data
 -  `TF_endings.ipynb`: Code to analyze the terminal amino acids for YGOB homologous sequences. These plots were not used in the final iteration of this paper.
 -  `predict-tiles.py` : Codue used to run the FINCHES analysis
  
