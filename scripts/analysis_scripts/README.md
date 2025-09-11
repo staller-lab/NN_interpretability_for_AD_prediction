@@ -27,9 +27,6 @@ These notebooks create the majority of the main figure pannels.
 	- Contains code to create **Figure S7**
  - `equilibrium_constants.ipynb` : Explores the relationship between the equilibrium constant, the activity and the finches score.
 	- Contains code to create **Figure S11**
-- `split_data_w_test.ipynb` : Splits data into train, validation, test sets.
-	- Contains code to create **Figure S14**
-	- CHECK: Is this in the Data folder or here?  
 - `compare_bound_transformations.ipynb`: Compares functions (Linear vs. Hill) to transform bound TF to GFP
 	- Contains code to create **Figure S15**
 
