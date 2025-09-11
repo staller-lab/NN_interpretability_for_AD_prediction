@@ -6,7 +6,6 @@ These notebooks create the majority of the main figure pannels.
 - `compare_simple_w_deep_abund.ipynb` : This notebook creates all the plots in **Figure 2**, specifically comparing the SimpleNN abund to a deep NNs, visualizing the SimpleNN parameters, and plotting abundance histograms. Also makes histograms for Figure S5.
 - `compare_two_and_three_state.ipynb` : This notebook creates the scatter plots in **Figures 3 and 4**. Also creates the parameter visualizations in **Figures 2 and 3**.
 - `tile_replaced_analysis_Pooja.ipynb` : This notebook performs a post-hoc analysis of the deep neural networks. It loads predictions for all variants and summarizes them. Contains code to create **Figure 3H and S12**.
-	- NEED TO FINALIZE
 
 ### Supplemental analysis notebooks
 - `comparing_seeds.ipynb` : This notebook compares the performance of many different random initalizations of the SimpleNN and BiophysicalNNs. 
