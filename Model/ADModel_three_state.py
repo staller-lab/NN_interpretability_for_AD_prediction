@@ -67,8 +67,8 @@ class ADModel_three_state(torch.nn.Module):
     activate : torch.nn.ReLU
         The ReLU activation function 
         
-    activate (1-6) : torch.nn.PReLU
-        Parametric ReLU activation functions
+    activate (1-6) : torch.nn.LeakyReLU
+        Leaky ReLU activation functions
 
     train_losses : list
         Stores the trainning data loss for each epoch
@@ -157,12 +157,12 @@ class ADModel_three_state(torch.nn.Module):
         if self.relu:    
             self.activate = torch.nn.ReLU()
         else:
-            self.activate1 = torch.nn.PReLU(num_parameters=1, init=0.25)
-            self.activate2 = torch.nn.PReLU(num_parameters=1, init=0.25)
-            self.activate3 = torch.nn.PReLU(num_parameters=1, init=0.25)
-            self.activate4 = torch.nn.PReLU(num_parameters=1, init=0.25)
-            self.activate5 = torch.nn.PReLU(num_parameters=1, init=0.25)
-            self.activate6 = torch.nn.PReLU(num_parameters=1, init=0.25)
+            self.activate1 = torch.nn.LeakyReLU()
+            self.activate2 = torch.nn.LeakyReLU()
+            self.activate3 = torch.nn.LeakyReLU()
+            self.activate4 = torch.nn.LeakyReLU()
+            self.activate5 = torch.nn.LeakyReLU()
+            self.activate6 = torch.nn.LeakyReLU()
 
         # self.sigmoid = torch.nn.Sigmoid()
         
@@ -740,8 +740,8 @@ class ADModel_three_state_abund(ADModel_three_state):
     activate : torch.nn.ReLU
         The ReLU activation function 
         
-    activate (1-6) : torch.nn.PReLU
-        Parametric ReLU activation functions
+    activate (1-6) : torch.nn.LeakyReLU
+        LeakyReLU ReLU activation functions
 
     train_losses : list
         Stores the trainning data loss for each epoch
@@ -840,12 +840,12 @@ class ADModel_three_state_abund(ADModel_three_state):
         if self.relu:    
             self.activate = torch.nn.ReLU()
         else:
-            self.activate1 = torch.nn.PReLU(num_parameters=1, init=0.25)
-            self.activate2 = torch.nn.PReLU(num_parameters=1, init=0.25)
-            self.activate3 = torch.nn.PReLU(num_parameters=1, init=0.25)
-            self.activate4 = torch.nn.PReLU(num_parameters=1, init=0.25)
-            self.activate5 = torch.nn.PReLU(num_parameters=1, init=0.25)
-            self.activate6 = torch.nn.PReLU(num_parameters=1, init=0.25)
+            self.activate1 = torch.nn.LeakyReLU()
+            self.activate2 = torch.nn.LeakyReLU()
+            self.activate3 = torch.nn.LeakyReLU()
+            self.activate4 = torch.nn.LeakyReLU()
+            self.activate5 = torch.nn.LeakyReLU()
+            self.activate6 = torch.nn.LeakyReLU()
         
         # Layer to go from bound to activity
         if transformation == "Linear":

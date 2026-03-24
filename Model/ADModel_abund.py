@@ -30,8 +30,8 @@ class ADModel_abund(torch.nn.Module):
     linear1 : torch.nn.Linear
         The dense/fully connected layer
     
-    activate : torch.nn.PReLU
-        The parametric ReLU activation function
+    activate : torch.nn.LeakyReLU
+        The leaky ReLU activation function
 
     train_losses : list
         Stores the trainning data loss for each epoch
@@ -84,7 +84,7 @@ class ADModel_abund(torch.nn.Module):
         torch.nn.init.constant_(self.linear1.bias, 0)    # All biases set to 0.5
 
         # Activation function 
-        self.activate = torch.nn.PReLU(num_parameters=1, init=0.25)
+        self.activate = torch.nn.LeakyReLU()
 
 
     def forward(self,x): 
@@ -228,8 +228,8 @@ class ADModel_abund(torch.nn.Module):
                 break
 
              # Prints loss after each epoch
-            print(f'Epoch {e+1} \t\t Training Loss: {train_loss / len(train_dataloader)}')
-            print(f'Epoch {e+1} \t\t Validation Loss: {valid_loss / len(val_dataloader)}') 
+            # print(f'Epoch {e+1} \t\t Training Loss: {train_loss / len(train_dataloader)}')
+            # print(f'Epoch {e+1} \t\t Validation Loss: {valid_loss / len(val_dataloader)}') 
 
         return train_loss/len(train_dataloader), valid_loss/len(val_dataloader)
 

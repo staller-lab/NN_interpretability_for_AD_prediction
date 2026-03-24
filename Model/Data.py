@@ -60,9 +60,12 @@ class DataReader:
     def encode_seq_2d(self):
          # Getting sequences
         X = self.data['aa_seq']
+
+        # Added code to make any size
+        length = len(X.iloc[0])
         one_hot = []
         for seq in X: 
-            matrix = np.zeros((40,20))
+            matrix = np.zeros((length,20))
 
             # Iterate over the amino acid sequence and set matrix entries to 1
             for position, amino_acid in enumerate(seq):
@@ -206,7 +209,7 @@ class SplitData:
             self.tensor_y_test = torch.stack((tensor_y_test_abund, tensor_y_test_act)).transpose(0,1)
 
 
-    def read_split_data(self, train_file, val_file, test_file, scaler="MinMaxScaler", return_val=False, ratio=False):
+    def read_split_data(self, train_file, val_file, test_file, scaler="MinMaxScaler", return_val=False, ratio=False, prefix=''):
         # Read in both the data somehow
         # Use scalar.fix to get min and max of all data
         # Transfor both data separately 
@@ -317,10 +320,10 @@ class SplitData:
                 if ratio: 
                     scaler_ratio.fit(all_ratio)
 
-            dump(scaler_abund, 'scaler_abund.bin', compress=True)
-            dump(scaler_activity, 'scaler_activity.bin', compress=True)
+            dump(scaler_abund, f'{prefix}scaler_abund.bin', compress=True)
+            dump(scaler_activity, f'{prefix}scaler_activity.bin', compress=True)
             if ratio: 
-                dump(scaler_ratio, 'scaler_ratio.bin', compress=True)
+                dump(scaler_ratio, f'{prefix}scaler_ratio.bin', compress=True)
 
             self.y_train_abundance = scaler_abund.transform(self.y_train_abundance)
             self.y_val_abundance = scaler_abund.transform(self.y_val_abundance)

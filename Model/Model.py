@@ -10,7 +10,7 @@ from Data import DataReader, SplitData
 from ADModel_act import ADModel_act
 from ADModel_abund import ADModel_abund
 from ADModel_three_state import ADModel_three_state, ADModel_three_state_abund
-from ADModel_two_state import ADModel_two_state, ADModel_two_state_abund
+from ADModel_two_state import ADModel_two_state, ADModel_two_state_abund, ADModel_two_state_abund_frozen, ADModel_two_state_abund_hill_normalized
 
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -155,7 +155,13 @@ def get_params(args):
     else:
         seed = 25
 
-    return file, scale, batch_size, activity_fun, epochs, outfile, outchannel, kernel_size, learning_rate, relu, test, val_file, intelligent_split, neg_pen, weight_pen, hill_val, abund_kernel_value, seed
+    # This is for saving the scaler
+    if args.prefix:
+        prefix = args.prefix
+    else:
+        prefix = ""
+
+    return file, scale, batch_size, activity_fun, epochs, outfile, outchannel, kernel_size, learning_rate, relu, test, val_file, intelligent_split, neg_pen, weight_pen, hill_val, abund_kernel_value, seed, prefix
 
 # Run the model in the normal way
 def fit(args): 
@@ -188,6 +194,8 @@ def fit(args):
     hill_val = params[15]
     abund_kernel_value = params[16]
     seed = params[17]
+    prefix = params[18]
+ 
 
     # Loading in the data 
     data_reader = DataReader()
@@ -196,7 +204,7 @@ def fit(args):
     split_data = SplitData(data_reader,encoding_type="2D")
     
     if intelligent_split: 
-        split_data.read_split_data(file, val_file, test_file, scaler=scale)
+        split_data.read_split_data(file, val_file, test_file, scaler=scale, prefix=prefix)
     else: 
         split_data.read_data(scale=scale)
         split_data.split_data(ratio=False)
@@ -216,6 +224,12 @@ def fit(args):
     elif args.model == "two_state_abund":
         print(f"Training two state model with filter size of {kernel_size} and abundance filter size of {abund_kernel_value}")
         model = ADModel_two_state_abund(size, activity_fun, kernel_size, outchannel, relu, hill_val, abund_k=abund_kernel_value, seed=seed)
+    elif args.model == "two_state_abund_hill_normalized":
+        print(f"Training hill normalized two state model with filter size of {kernel_size} and abundance filter size of {abund_kernel_value}")
+        model = ADModel_two_state_abund_hill_normalized(size, activity_fun, kernel_size, outchannel, relu, hill_val, abund_k=abund_kernel_value, seed=seed)
+    elif args.model == "two_state_abund_frozen":
+        print(f"Training two state model with filter size of {kernel_size} and frozen abund weights")
+        model = ADModel_two_state_abund_frozen(size, activity_fun, kernel_size, outchannel, relu, hill_val, abund_k=abund_kernel_value, seed=seed)
     elif args.model == "simple_act":
         print(f"Training simple activity model with filter size of {kernel_size}")
         model = ADModel_act(size,kernel_size, seed=seed)
@@ -284,6 +298,7 @@ def main():
     parser.add_argument("-i","--intelligent_split",action='store_true',help="Whether to use separate file of validation data (must be provided with the -v argument)")
     parser.add_argument("-np","--negative_penalty",help="How much to penalize negative K values",type=float)
     parser.add_argument("-wp","--weight_penalty",help="How much to penalize negative weight values", type=float)
+    parser.add_argument("-prefix", "--prefix", help="Prefix to save scaler under", type=str)
 
     # Adding arguments related to the actual model
     parser.add_argument("-s", "--scale",help = "Method for scaling the activity and abundance",type=str)
