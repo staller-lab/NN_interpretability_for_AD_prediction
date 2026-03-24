@@ -11,7 +11,7 @@ from scipy.stats import pearsonr, spearmanr
 import sys
 sys.path.append("/Users/claireleblanc/Documents/grad_school/staller_lab/NN_interpretability_for_AD_prediction/Model")
 from ADModel_three_state import ADModel_three_state, ADModel_three_state_abund
-from ADModel_two_state import ADModel_two_state, ADModel_two_state_abund
+from ADModel_two_state import ADModel_two_state, ADModel_two_state_abund, ADModel_two_state_abund_frozen, ADModel_two_state_abund_hill_normalized
 from ADModel_act import ADModel_act
 from ADModel_abund import ADModel_abund
 from Data import DataReader, SplitData, FastTensorDataLoader
@@ -123,6 +123,14 @@ elif args.normal_model == "two_state_abund":
     abund_kernel = True
     two_state = True
     loaded_model = ADModel_two_state_abund(size,activity_fun,kernel_size,outchannel,relu,hill_val, abund_kernel_value)
+elif args.normal_model == "two_state_abund_hill_normalized": 
+    abund_kernel = True
+    two_state = True
+    loaded_model = ADModel_two_state_abund_hill_normalized(size,activity_fun,kernel_size,outchannel,relu,hill_val, abund_kernel_value)
+elif args.normal_model == 'two_state_abund_frozen':
+    abund_kernel = True
+    two_state = True
+    loaded_model = ADModel_two_state_abund_frozen(size,activity_fun,kernel_size,outchannel,relu,hill_val, abund_kernel_value)
 elif args.normal_model == "simple_act":
     simple_act = True
     loaded_model = ADModel_act(size,kernel_size)
